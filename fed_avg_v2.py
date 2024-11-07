@@ -6,7 +6,9 @@ import random
 #Funzione che divide il dataset a seconda delle classi
 def divide_set(num_clients, images, labels, B):
 
-    num_classes = int(10 / 2)  # Ogni client ha metà delle 10 classi
+    num_classes = 10
+    images_per_class = len(images) // num_classes  # Numero totale di immagini per classe
+    images_per_client_per_class = images_per_class // num_clients  # Immagini per classe per client
 
     # Creiamo una lista di immagini suddivise per classe
     class_data = {i: [] for i in range(10)}  #10 classi di fashion mnist
@@ -18,13 +20,16 @@ def divide_set(num_clients, images, labels, B):
     # Creiamo i dati per i client
     client_data = []
     for i in range(num_clients):
-        client_classes = random.sample(range(10), num_classes)
         client_images = []
         client_labels = []
         
-        for cl in client_classes:
-            client_images.extend([item[0] for item in class_data[cl]])
-            client_labels.extend([item[1] for item in class_data[cl]])
+        for cl in range(num_classes):
+            start_index = i * images_per_client_per_class
+            end_index = start_index + images_per_client_per_class
+            client_class_images = class_data[cl][start_index:end_index]
+
+            client_images.extend([item[0] for item in client_class_images])
+            client_labels.extend([item[1] for item in client_class_images])
         
         # Creiamo un dataset da assegnare al client
         client_dataset = tf.data.Dataset.from_tensor_slices((client_images,client_labels))
@@ -36,7 +41,7 @@ def divide_set(num_clients, images, labels, B):
 
 
 #Carichiamo il dataset specificato nel main, partizioniamo il train set per ogni client e restituiamo il test set
-def load_data(B, num_clients):
+def load_data(dataset_name, B, num_clients):
     """
     Carica il dataset specificato e lo prepara per l'addestramento.
     """
@@ -74,14 +79,14 @@ def client_update(initial_weights, ds_train, E):
     return model.get_weights()
 
 
-def start_simulation(K, rounds, C, B, E):
+def start_simulation(K, rounds, C, B, E, dataset_name):
     """
     Funzione che avvia la simulazione di Federated Learning.
     Riceve come parametri K (numero di client), rounds (numero di round),
     C (percentuale di client selezionati), B (dimensione del minibatch) ed E (epoche).
     """
     # Carica e partiziona i dati e ottieni il test_set
-    client_data, ds_test = load_data(B, K)
+    client_data, ds_test = load_data(dataset_name, B, K)
 
     client_ids = list(range(K))
 
