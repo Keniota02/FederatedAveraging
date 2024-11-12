@@ -7,8 +7,9 @@ import numpy as np
 def divide_set_uniform(num_clients, images, labels, B):
     num_classes = 10
     images_per_class = len(images) // num_classes  # 6000 immagini per classe
-    images_per_client_per_class = 1200  # Ogni client riceve 1200 immagini per classe
+    print(images_per_class)
     classes_per_client = 5  # Ogni client riceve immagini da 5 classi
+    images_per_client_per_class = images_per_class // classes_per_client  # Ogni client riceve 1200 immagini per classe
 
     # Creiamo una lista di immagini suddivise per classe
     class_data = {i: [] for i in range(num_classes)}  # 10 classi di fashion mnist
