@@ -4,42 +4,6 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 
-#Funzione che divide il dataset a seconda delle classi
-def divide_set(num_clients, images, labels, B):
-
-    num_classes = 10
-    images_per_class = len(images) // num_classes  # Numero totale di immagini per classe
-    images_per_client_per_class = images_per_class // num_clients  # Immagini per classe per client
-
-    # Creiamo una lista di immagini suddivise per classe
-    class_data = {i: [] for i in range(10)}  #10 classi di fashion mnist
-
-    # Suddividiamo le immagini per classe
-    for img, lbl in zip(images, labels):
-        class_data[lbl].append((img, lbl))
-
-    # Creiamo i dati per i client
-    client_data = []
-    for i in range(num_clients):
-        client_images = []
-        client_labels = []
-        
-        for cl in range(num_classes):
-            start_index = i * images_per_client_per_class
-            end_index = start_index + images_per_client_per_class
-            client_class_images = class_data[cl][start_index:end_index]
-
-            client_images.extend([item[0] for item in client_class_images])
-            client_labels.extend([item[1] for item in client_class_images])
-        
-        # Creiamo un dataset da assegnare al client
-        client_dataset = tf.data.Dataset.from_tensor_slices((client_images,client_labels))
-        client_dataset = client_dataset.shuffle(len(client_images)).batch(B).prefetch(tf.data.AUTOTUNE)
-        client_data.append(client_dataset)
-
-    return client_data
-
-
 def divide_set_uniform(num_clients, images, labels, B):
     num_classes = 10
     images_per_class = len(images) // num_classes  # 6000 immagini per classe
