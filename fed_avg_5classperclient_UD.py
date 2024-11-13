@@ -82,7 +82,7 @@ def show_client_class_distribution(client_data, num_classes=10):
     plt.xlabel("Client")
     plt.ylabel("Numero di Campioni")
     plt.xticks(range(len(client_data)), [f"Client {i}" for i in range(len(client_data))])
-    plt.legend(title="Classi")
+    plt.legend(title="Classi", bbox_to_anchor=(0.95, 1), loc='upper left')
     plt.grid(axis='y')
 
     # Mostra il grafico
