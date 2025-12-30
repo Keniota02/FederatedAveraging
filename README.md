@@ -1,16 +1,15 @@
 # FederatedAveraging
-Implementazione Federated Averaging Algorithm con client sequenziali
+Progetto di Tesi Triennale in Ingegneria Informatica: implementare una simulazione dell'algoritmo Federated Averaging (FedAvg) utilizzando TensorFlow.
 
-[Grafico confronto accuracy](./docs/Confronto_final.pdf)
-[Partizionamento 1 classe per client](./docs/Divisione_1_classe.pdf)
-[Partizionamento 5 classi per client](./docs/Divisione_5_classi.pdf)
-[Partizionamento IID](./docs/Divisione_Classi_IID.pdf)
+L'obiettivo è addestrare un modello di Deep Learning (MLP) su dataset come MNIST o Fashion-MNIST senza che i dati dei singoli utenti vengano mai trasmessi a un server centrale. Solo i pesi del modello vengono condivisi e aggregati.
 
-[Grafico 1 classe per client](./docs/1_classe_per_client.pdf)
-[Grafico 5 classi per client](./docs/5_classi_per_client.pdf)
-[Grafico IID/10 classi per client](./docs/IID_version.pdf)
+Il progetto è strutturato in tre varianti:
+1. V1 (Base): Simulazione locale su dataset MNIST con partizionamento automatico dei dati.
+   [main.py](main.py) e [fed_avg.py](fed_avg.py): Versione base per test rapidi
 
-            Round 0	Round 1	Round 2	Round 3	Round 4	Round 5	Round 6	Round 7	Round 8	Round 9	Round 10
-IID	        14,33	81,74	83,39	84,03	84,8	85,13	85,36	85,69	85,79	86,01	86,21
-5 classi	7,36	57,73	75,27	81,19	82,22	82,65	82,82	83,33	83,36	83,54	83,64
-1 classe 	10,44	11,67	19,3	26,13	30,14	33,63	37,43	40,34	43,32	45,37	47,54
+3. V2 (Avanzata): Simulazione su Fashion-MNIST con gestione manuale della distribuzione delle classi (IID/Non-IID) e visualizzazione grafica della distribuzione e dell'accuratezza.
+   [main_v2.py](main_v2.py) e [fed_avg_v2.py](fed_avg_v2.py): Versione con grafici e controllo della distribuzione dei dati.
+
+5. V3 (Networked): Architettura reale distribuita che utilizza Socket per la comunicazione tra un Server centrale e più processi Client indipendenti (sviluppo solo abbozzato).
+   [server.py](server.py): Il nodo centrale che gestisce i round, invia i pesi e aggrega i risultati.
+   [client.py](client.py): Lo script che simula il dispositivo dell'utente, addestra il modello localmente e restituisce i pesi.
